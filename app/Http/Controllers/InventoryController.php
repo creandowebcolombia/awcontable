@@ -24,9 +24,9 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_name' => 'required',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
+            'product_name' => 'required|max:255',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
 
         Inventory::create($request->all());
@@ -44,9 +44,9 @@ class InventoryController extends Controller
     public function update(Request $request, Inventory $inventory)
     {
         $request->validate([
-            'product_name' => 'required',
-            'quantity' => 'required|integer',
-            'price' => 'required|numeric',
+            'product_name' => 'required|max:255',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
 
         $inventory->update($request->all());
