@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use App\Imports\ProductsImport;
+use App\Exports\ProductsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryController extends Controller
 {
@@ -60,5 +63,23 @@ class InventoryController extends Controller
         $inventory->delete();
 
         return redirect()->route('inventories.index')->with('success', 'Producto eliminado exitosamente');
+    }
+
+    // Exportar inventarios a Excel
+    public function exportProducts()
+    {
+        return Excel::download(new ProductsExport, 'productos.xlsx');
+    }
+
+    // Importar productos desde Excel
+    public function importProducts(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('file')->store('temp'));
+
+        return redirect()->back()->with('success', 'Productos importados correctamente.');
     }
 }
